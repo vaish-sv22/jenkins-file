@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/vaish-sv22/jenkinsfile-repo.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh './gradlew build'
+            }
+        }
+    }
+}
+and 
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/vaish-sv22/jenkinsfile-repo.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh './gradlew build'
+            }
+        }
+
+    }
+
+    post {
+        success {
+            echo 'Gradle build completed successfully.'
+        }
+
+        failure {
+            echo 'Gradle build failed.'
+        }
+
+        always {
+            echo 'Pipeline execution finished.'
+        }
+    }
+}

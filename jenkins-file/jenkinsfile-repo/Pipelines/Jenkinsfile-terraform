@@ -1,0 +1,71 @@
+pipeline {
+    agent any
+
+    parameters {
+        booleanParam(
+            name: 'autoApprove',
+            defaultValue: false,
+            description: 'Automatically approve Terraform apply or destroy'
+        )
+
+        choice(
+            name: 'action',
+            choices: ['apply', 'destroy'],
+            description: 'Select Terraform action'
+        )
+    }
+
+    environment {
+        AWS_ACCESS_KEY_ID     = credentials('aws-access-key-id')
+        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
+        AWS_DEFAULT_REGION    = 'ap-south-1'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/vaish-sv22/jenkinsfile-repo.git'
+            }
+        }
+
+        stage('Terraform Init') {
+            steps {
+                bat 'terraform init'
+            }
+        }
+
+        stage('Terraform Plan') {
+            steps {
+                bat 'terraform plan -out=tfplan'
+                bat 'terraform show -no-color tfplan > tfplan.txt'
+            }
+        }
+
+        stage('Terraform Apply / Destroy') {
+            steps {
+                script {
+                    if (params.action == 'apply') {
+                        bat "terraform apply ${params.autoApprove ? '--auto-approve' : ''}"
+                    } else {
+                        bat "terraform destroy ${params.autoApprove ? '--auto-approve' : ''}"
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Terraform pipeline completed successfully.'
+        }
+
+        failure {
+            echo 'Terraform pipeline failed.'
+        }
+
+        always {
+            echo 'Pipeline execution finished.'
+        }
+    }
+}
