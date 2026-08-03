@@ -25,7 +25,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/vaish-sv22/jenkinsfile-repo.git'
+                git branch: 'main', url: 'https://github.com/vaish-sv22/jenkins-file.git'
             }
         }
 
