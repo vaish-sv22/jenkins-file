@@ -1,1 +1,12 @@
+# Licenses
 
+This directory contains the licensing information, legal notices, and copyright
+details for this Jenkins project and any third-party components used within it.
+
+## Contents
+
+- LICENSE – Project license
+- NOTICE – Legal notices and acknowledgements
+- COPYRIGHT.md – Copyright information
+- THIRD_PARTY_LICENSES.md – Third-party software licenses
+- DEPENDENCIES.md – Project dependencies and their licenses
